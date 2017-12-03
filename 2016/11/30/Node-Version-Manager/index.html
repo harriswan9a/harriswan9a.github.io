@@ -1,0 +1,664 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Node,NVM," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Harris Wang Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.2" />
+
+
+
+
+
+
+<meta name="description" content="What’s NVM依據 Node Release 週期來看，莫約兩週就會有一個新版本(目前v7.2.0)，對於開發者來說時常更新是一件很麻煩的事情，尤其某些專案用到特定套件發生版本衝突問題，nvm專為Node版本管理而生，能夠於本地端安裝多版本且支援版本間快速切換。  詳細說明請參閱 Node Version Ma">
+<meta name="keywords" content="Node,NVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node Version Manager - Node 版本管理 (nvm)">
+<meta property="og:url" content="https://harriswan9a.github.io/2016/11/30/Node-Version-Manager/index.html">
+<meta property="og:site_name" content="Harris Wang Blog">
+<meta property="og:description" content="What’s NVM依據 Node Release 週期來看，莫約兩週就會有一個新版本(目前v7.2.0)，對於開發者來說時常更新是一件很麻煩的事情，尤其某些專案用到特定套件發生版本衝突問題，nvm專為Node版本管理而生，能夠於本地端安裝多版本且支援版本間快速切換。  詳細說明請參閱 Node Version Manager Github Node.js Previous Release Ve">
+<meta property="og:locale" content="zh-tw">
+<meta property="og:image" content="https://harriswan9a.github.io/2016/11/30/Node-Version-Manager/screenshot_2016_11_30_14_37.png">
+<meta property="og:image" content="https://harriswan9a.github.io/2016/11/30/Node-Version-Manager/screenshot_2016_11_30_15_00.png">
+<meta property="og:updated_time" content="2017-12-03T15:17:40.763Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node Version Manager - Node 版本管理 (nvm)">
+<meta name="twitter:description" content="What’s NVM依據 Node Release 週期來看，莫約兩週就會有一個新版本(目前v7.2.0)，對於開發者來說時常更新是一件很麻煩的事情，尤其某些專案用到特定套件發生版本衝突問題，nvm專為Node版本管理而生，能夠於本地端安裝多版本且支援版本間快速切換。  詳細說明請參閱 Node Version Manager Github Node.js Previous Release Ve">
+<meta name="twitter:image" content="https://harriswan9a.github.io/2016/11/30/Node-Version-Manager/screenshot_2016_11_30_14_37.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://harriswan9a.github.io/2016/11/30/Node-Version-Manager/"/>
+
+
+  <title> Node Version Manager - Node 版本管理 (nvm) | Harris Wang Blog </title>
+</head>
+
+<body itemscope itemtype="//schema.org/WebPage" lang="zh-tw">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-85754010-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="//schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Harris Wang Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分類
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            關於
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-works">
+          <a href="/works" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br />
+            
+            作品
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Node Version Manager - Node 版本管理 (nvm)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-11-30T12:14:38+00:00" content="2016-11-30">
+              2016-11-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="What’s-NVM"><a href="#What’s-NVM" class="headerlink" title="What’s NVM"></a>What’s NVM</h1><p>依據 Node Release 週期來看，莫約兩週就會有一個新版本(目前<strong><em>v7.2.0</em></strong>)，對於開發者來說時常更新是一件很麻煩的事情，<br>尤其某些專案用到特定套件發生版本衝突問題，<br>nvm專為Node版本管理而生，能夠於本地端安裝多版本且支援版本間快速切換。</p>
+<ul>
+<li>詳細說明請參閱 Node Version Manager <a href="https://github.com/creationix/nvm" target="_blank" rel="noopener">Github</a></li>
+<li>Node.js Previous Release <a href="https://nodejs.org/en/download/releases/" target="_blank" rel="noopener">Version</a></li>
+</ul>
+<p>建議一開始就不要使用 <code>brew</code> 安裝 <code>node</code>，可用命令來查詢目前已經安裝的套件有哪些<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew list</span><br></pre></td></tr></table></figure></p>
+<img src="/2016/11/30/Node-Version-Manager/screenshot_2016_11_30_14_37.png">
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Uninstall</span></span><br><span class="line">$ brew uninstall node</span><br></pre></td></tr></table></figure>
+<h1 id="NVM-for-Mac-OS"><a href="#NVM-for-Mac-OS" class="headerlink" title="NVM for Mac OS"></a>NVM for Mac OS</h1><p> 使用 <code>brew</code> 安裝 <code>nvm</code> (目前版本：<strong><em>0.32.1</em></strong>)</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ brew install nvm</span><br><span class="line"><span class="comment"># 查看nvm版本</span></span><br><span class="line">$ nvm --version</span><br><span class="line">0.32.1</span><br></pre></td></tr></table></figure>
+<p> 使用 <code>nvm</code> 安裝 <code>node</code>，預設會下載安裝最新版</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nvm install node</span><br></pre></td></tr></table></figure>
+<p> 安裝指定的版本號</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nvm install v6.9.1</span><br></pre></td></tr></table></figure>
+<p> 查看目前安裝的所有node版本</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nvm ls</span><br></pre></td></tr></table></figure>
+ <img src="/2016/11/30/Node-Version-Manager/screenshot_2016_11_30_15_00.png">
+<p>切換目前的 node 版本，這邊切換的同時也會同事切換 <code>npm</code> 哦，版本間的 <code>npm</code> 是不一樣的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ nvm use v6.9.1</span><br><span class="line">Now using node v6.9.1 (npm v3.10.8)</span><br><span class="line"></span><br><span class="line">$ nvm use v7.2.0</span><br><span class="line">Now using node v7.2.0 (npm v4.0.2)</span><br></pre></td></tr></table></figure>
+<p>切換版本後如果你嘗試開啟新的terminal會發現版本號依然是舊的，此時可以設定default的node版本，設定好後每次開啟新的頁面就會使用default版本了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ node -v</span><br><span class="line">v7.2.0</span><br><span class="line"></span><br><span class="line">$ nvm <span class="built_in">alias</span> default v6.9.1</span><br><span class="line">default -&gt; v6.9.1</span><br><span class="line"></span><br><span class="line">$ nvm ls</span><br><span class="line">         v6.0.0</span><br><span class="line">         v6.9.1</span><br><span class="line">-&gt;       v7.2.0</span><br><span class="line">         system</span><br><span class="line">default -&gt; v6.9.1</span><br><span class="line">node -&gt; stable (-&gt; v7.2.0) (default)</span><br><span class="line">stable -&gt; 7.2 (-&gt; v7.2.0) (default)</span><br><span class="line">iojs -&gt; N/A (default)</span><br><span class="line">lts/* -&gt; lts/boron (-&gt; v6.9.1)</span><br><span class="line">lts/argon -&gt; v4.6.2 (-&gt; N/A)</span><br><span class="line">lts/boron -&gt; v6.9.1</span><br></pre></td></tr></table></figure>
+<p>最後是移除 node 其中一個版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ nvm uninstall v6.9.1</span><br><span class="line">Uninstalled node v6.9.1</span><br></pre></td></tr></table></figure>
+<p>要注意的是移除後須確認default是否已經指定到其他版本，否則下次開啟終端機會不知道要使用哪一個版本哦</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Last login: Wed Nov 30 15:18:46 on ttys006</span><br><span class="line">N/A: version <span class="string">"N/A"</span> is not yet installed.</span><br><span class="line"></span><br><span class="line">You need to run <span class="string">"nvm install N/A"</span> to install it before using it.</span><br><span class="line">$ node -v</span><br><span class="line">v4.3.0</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Node/" rel="tag">#Node</a>
+          
+            <a href="/tags/NVM/" rel="tag">#NVM</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/11/Android-CI-2/" rel="next" title="Android-CI 配置篇(未完)">
+                <i class="fa fa-chevron-left"></i> Android-CI 配置篇(未完)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/14/react-native-note/" rel="prev" title="React Native 學習筆記">
+                React Native 學習筆記 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="//schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Harris Wang" />
+          <p class="site-author-name" itemprop="name">Harris Wang</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分類</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">標籤</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/harriswan9a" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#What’s-NVM"><span class="nav-number">1.</span> <span class="nav-text">What’s NVM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NVM-for-Mac-OS"><span class="nav-number">2.</span> <span class="nav-text">NVM for Mac OS</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Harris Wang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
